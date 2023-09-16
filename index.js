@@ -1,6 +1,9 @@
 const express = require("express");
 const bodyParse = require("body-parser");
 const connection = require("./database/database");
+const categoriesController = require("./categories/CategoriesController");
+const articlesController = require("./articles/ArticlesController");
+
 const app = express();
 
 
@@ -24,9 +27,9 @@ connection.authenticate().then(() => {
 	console.log(`Erro in connection DB... Details:${error}`);
 })
 //End
-app.get("/", (req, res) => {
-	res.render('index');
-});
+
+app.use("/", categoriesController);
+app.use("/", articlesController);
 
 app.listen(8080, () => {
 	console.log("The server has been started....")
