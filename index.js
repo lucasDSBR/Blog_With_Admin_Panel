@@ -1,17 +1,31 @@
 const express = require("express");
 const bodyParse = require("body-parser");
+const session = require("express-session");
+
 const connection = require("./database/database");
+
+
 const categoriesController = require("./categories/CategoriesController");
 const articlesController = require("./articles/ArticlesController");
-
+const usersController = require("./users/UsersController");
 
 const Article = require("./articles/Article");
 const Category = require("./categories/Category");
+const User = require("./users/User");
 const app = express();
 
 
 // View engine
 app.set('view engine', 'ejs');
+//End
+
+//Session
+app.use(session({
+	secret: "#%asdDE&*=%tsg23@#FS",
+	cookie: {
+		maxAge: 30000
+	}
+}));
 //End
 
 // Static
@@ -33,6 +47,8 @@ connection.authenticate().then(() => {
 
 app.use("/", categoriesController);
 app.use("/", articlesController);
+app.use("/", usersController);
+
 
 app.get("/", (req, res) => {
 	Article.findAll({

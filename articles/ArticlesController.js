@@ -3,7 +3,10 @@ const router = express.Router();
 const Category = require("../categories/Category");
 const Articles = require("./Article");
 const { default: slugify } = require("slugify");
-router.get("/admin/articles", (req, res) => {
+const adminAuth = require('../middlewares/adminAuth');
+
+
+router.get("/admin/articles", adminAuth, (req, res) => {
 	Articles.findAll({
 		include: [{
 			model: Category
@@ -13,12 +16,12 @@ router.get("/admin/articles", (req, res) => {
 	});
 });
 
-router.get("/admin/articles/new", (req, res) => {
+router.get("/admin/articles/new", adminAuth, (req, res) => {
 	Category.findAll().then(categories => {
 		res.render("admin/articles/new", { categories: categories});
 	});
 });
-router.post("/articles/save", (req, res) => {
+router.post("/articles/save", adminAuth, (req, res) => {
 	let title = req.body.title;
 	let body = req.body.body;
 	let category = req.body.category;
@@ -33,7 +36,7 @@ router.post("/articles/save", (req, res) => {
 	})
 });
 
-router.post("/articles/delete", (req, res) => {
+router.post("/articles/delete", adminAuth, (req, res) => {
 	let id = req.body.id;
 	if(id != undefined){
 		if(!isNaN(id)){
@@ -52,7 +55,7 @@ router.post("/articles/delete", (req, res) => {
 	}
 });
 
-router.get("/admin/articles/edit/:id", (req, res) => {
+router.get("/admin/articles/edit/:id", adminAuth, (req, res) => {
 	let id = req.params.id;
 	Articles.findByPk(id).then(article => {
 		if(!isNaN(id)){
@@ -73,7 +76,7 @@ router.get("/admin/articles/edit/:id", (req, res) => {
 	})
 });
 
-router.post("/articles/update", (req, res) => {
+router.post("/articles/update", adminAuth, (req, res) => {
 	let id = req.body.id;
 	let title = req.body.title;
 	let body = req.body.body;
@@ -90,7 +93,7 @@ router.post("/articles/update", (req, res) => {
 		res.redirect("/admin/articles");
 	})
 });
-router.get("/articles/page/:num", (req, res) => {
+router.get("/articles/page/:num", adminAuth, (req, res) => {
 	var page = req.params.num;
 	var offSet = 0;
 	if(isNaN(page) || page == 1)
