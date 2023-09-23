@@ -7,10 +7,17 @@
 			<h3>Register Article</h3>
 		</div>
 		<div class="card-body">
-			<form method="POST" action="/categories/save">
+			<form method="POST" action="/articles/save">
 				<input class="form-control" type="text" name="title" placeholder="Define the article title">
 				<br>
 				<textarea class="form-control" placeholder="Write the article here..." name="body" id="article"></textarea>
+				<br>
+				<label>Category:</label>
+				<select name="category" class="form-control">
+					<% categories.forEach((category) => { %>
+						<option value="<%= category.id %>"><%= category.title %></option>
+					<%});%>
+				</select>
 				<br>
 				<button class="btn btn-success">Register</button>
 			</form>
